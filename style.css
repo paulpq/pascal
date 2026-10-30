@@ -253,7 +253,7 @@ td:nth-child(2) { font-weight: 500; }
   .challenge-answer { padding: 24px 20px; }
   .challenge-answer label { font-size: 16px; }
   .answer-controls { flex-wrap: nowrap; }
-  .answer-controls input { flex-basis: auto; font-size: 14px; padding: 10px; }
+  .answer-controls input { flex-basis: auto; font-size: 16px; padding: 10px; }
   .answer-controls .button { padding: 12px 14px; font-size: 14px; }
   .answer-feedback, .solution { font-size: 16px; }
   .page-intro { flex-direction: column; align-items: flex-start; padding: 28px 0 32px; gap: 22px; }
