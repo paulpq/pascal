@@ -1,7 +1,3 @@
-const dataScript = document.createElement('script');
-dataScript.src = 'data.js?v=monthly-groups-1';
-dataScript.onload = init;
-document.head.append(dataScript);
 let D, currentPage = '';
 const $ = (s, r = document) => r.querySelector(s);
 const grades = {5:'a V-a',6:'a VI-a',7:'a VII-a',8:'a VIII-a',9:'a IX-a',10:'a X-a'};
@@ -9,6 +5,26 @@ const escapeHTML = s => String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;'
 const params = () => new URLSearchParams(location.hash.split('?')[1] || '');
 const editionLabel = id => D.editions.find(e => e.id === id)?.label || id;
 const categoryFor = grade => D.categories.find(c => c.grades.includes(+grade));
+const seenReveals = new WeakSet();
+const revealObserver = 'IntersectionObserver' in window ? new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (!entry.isIntersecting) return;
+    entry.target.classList.add('reveal-in');
+    revealObserver.unobserve(entry.target);
+  });
+}, {threshold:0.08}) : null;
+function revealContent() {
+  if (!revealObserver) return;
+  document.querySelectorAll('.reveal').forEach(element => {
+    if (seenReveals.has(element)) return;
+    seenReveals.add(element);
+    revealObserver.observe(element);
+  });
+}
+function closeMenu() {
+  $('#navigation').classList.remove('open');
+  $('#menu-toggle').setAttribute('aria-expanded','false');
+}
 function init() {
   D = window.PASCAL;
   window.addEventListener('hashchange', route);
@@ -16,6 +32,15 @@ function init() {
     const open = $('#navigation').classList.toggle('open');
     $('#menu-toggle').setAttribute('aria-expanded', open);
   };
+  document.addEventListener('keydown', event => {
+    if (event.key === 'Escape' && $('#navigation').classList.contains('open')) {
+      closeMenu();
+      $('#menu-toggle').focus();
+    }
+  });
+  document.addEventListener('click', event => {
+    if (!event.target.closest('.site-header')) closeMenu();
+  });
   route();
 }
 function selectedEdition() {
@@ -37,14 +62,16 @@ function route() {
   }
   const previous = currentPage;
   currentPage = page;
+  revealObserver?.disconnect();
   $('#navigation').classList.remove('open');
   $('#menu-toggle').setAttribute('aria-expanded', 'false');
   const routes = {'':home,arhiva:archive,antrenament:practice,clasament:ranking,despre:about,'despre-concurs':home};
   (routes[page] || notFound)();
+  revealContent();
   document.querySelectorAll('#navigation a').forEach(a => a.getAttribute('href') === '#/' + page ? a.setAttribute('aria-current', 'page') : a.removeAttribute('aria-current'));
   const titles = {'':'Concurs lunar de matematică',arhiva:'Arhivă',antrenament:'Antrenament',clasament:'Clasament',despre:'Despre această versiune','despre-concurs':'Despre concurs'};
   document.title = 'Pascal — ' + (titles[page] || 'Pagină negăsită');
-  if (previous !== page) { window.scrollTo(0, 0); $('#main').focus({preventScroll:true}); }
+  if (previous !== page) { window.scrollTo({top:0,left:0,behavior:'instant'}); $('#main').focus({preventScroll:true}); }
   if (page === 'despre-concurs') requestAnimationFrame(() => $('#despre-concurs').scrollIntoView({behavior:'instant',block:'start'}));
 }
 function title(h, p) {
@@ -54,12 +81,12 @@ function home() {
   $('#main').innerHTML = `<div class="wrap">
     <section class="hero">
       <div class="hero-copy"><h1 class="reveal">Pascal</h1><p class="reveal"><strong>Concurs lunar de matematică</strong>O ediție în fiecare lună, pentru elevii cărora le plac problemele și ideile bune.</p><a class="button accent reveal" href="#/arhiva">Descoperă arhiva</a></div>
-      <div class="hero-format"><h2 class="reveal">Categorii de clase</h2><div class="category-list">${D.categories.map(c => `<a class="reveal" href="#/antrenament?categorie=${c.id}" aria-label="Antrenament · clasele ${c.label}">${c.label}</a>`).join('')}</div><p class="reveal">Calendarul și detaliile de participare vor fi anunțate de organizatori.</p></div>
+      <div class="hero-format"><h2 class="reveal">Categorii de clase</h2><div class="category-list">${D.categories.map(c => `<a class="reveal" href="#/antrenament?categorie=${c.id}" aria-label="Antrenament · clasele ${c.label}"><span class="category-grade">${c.label}</span><span class="category-action">Antrenament</span></a>`).join('')}</div><p class="reveal">Calendarul și detaliile de participare vor fi anunțate de organizatori.</p></div>
     </section>
     <section class="home-section"><div class="section-head"><h2 class="reveal">Edițiile lunare</h2><p class="reveal">Problemele și soluțiile fiecărei ediții, în PDF-uri separate.</p></div><div class="edition-list">${D.editions.map(editionCard).join('')}</div></section>
     <section class="about-section" id="despre-concurs" aria-labelledby="about-heading"><div><h2 class="reveal" id="about-heading">Despre concurs</h2><p class="about-tagline reveal">O ediție în fiecare lună</p></div><div class="about-text"><p class="reveal">Pascal este un concurs lunar de matematică, organizat pe trei categorii: clasele V–VI, VII–VIII și IX–X.</p><p class="reveal">Problemele și soluțiile se păstrează în arhivă, iar clasamentul fiecărei categorii va fi publicat după concurs.</p><p class="reveal tentative">Categoria XI–XII este în pregătire și va fi confirmată ulterior.</p></div></section>
     <section class="resource-band"><div><h2 class="reveal">Antrenament</h2><p class="reveal">Pregătește-te cu probleme din categoria ta. Materialele pentru o ediție vor apărea înaintea concursului, după publicarea lor de către organizatori.</p></div><div class="resource-links"><a class="resource-link reveal" href="#/antrenament"><div><h3>Probleme de pregătire</h3><p>Exemple pentru cele trei categorii</p></div><span aria-hidden="true">↗</span></a><a class="resource-link reveal" href="#/clasament"><div><h3>Clasament</h3><p>Rezultate pe ediții și categorii</p></div><span aria-hidden="true">↗</span></a></div></section>
-    <section class="challenge" aria-labelledby="challenge-heading"><div class="challenge-copy"><h2 class="reveal" id="challenge-heading">Provocare</h2><p class="reveal">Pe o rețea de pătrate, faci trei pași la dreapta și doi în sus. În câte moduri diferite poți ajunge la destinație?</p><p class="sample-label">Problemă de exemplu · Combinatorică</p></div><div class="challenge-answer"><form id="challenge-form"><label for="challenge-answer">Câte drumuri ai găsit?</label><div class="answer-controls"><input id="challenge-answer" name="raspuns" type="number" min="0" step="1" required inputmode="numeric"><button class="button" type="submit">Verifică</button></div><p id="answer-feedback" class="answer-feedback" role="status"></p></form><details class="solution"><summary>Vezi soluția</summary>${D.practice.find(p => p.id === 'p2026-6').solution}</details></div></section>
+    <section class="challenge" aria-labelledby="challenge-heading"><div class="challenge-copy"><h2 class="reveal" id="challenge-heading">Provocare</h2><p class="reveal">Pe o rețea de pătrate, faci trei pași la dreapta și doi în sus. În câte moduri diferite poți ajunge la destinație?</p><p class="sample-label">Problemă de exemplu · Combinatorică</p></div><div class="challenge-answer reveal"><form id="challenge-form"><label for="challenge-answer">Câte drumuri ai găsit?</label><div class="answer-controls"><input id="challenge-answer" name="raspuns" type="number" min="0" step="1" required inputmode="numeric" placeholder="Răspunsul tău"><button class="button" type="submit">Verifică</button></div><p id="answer-feedback" class="answer-feedback" role="status"></p></form><details class="solution"><summary>Vezi soluția</summary>${D.practice.find(p => p.id === 'p2026-6').solution}</details></div></section>
   </div>`;
   $('#challenge-form').onsubmit = event => {
     event.preventDefault();
@@ -80,15 +107,28 @@ function editionCard(e) {
 }
 function archive() {
   const selected = params().has('editie') ? selectedEdition() : '';
-  $('#main').innerHTML = `<div class="wrap archive-page">${title('Arhivă','O ediție pe lună. Problemele și soluțiile, la un loc.')}<form class="filter-bar" id="archive-filters"><div class="field archive-select"><label for="archive-edition">Ediția lunară</label><select id="archive-edition"><option value="">Toate edițiile</option>${D.editions.map(e => `<option value="${e.id}" ${e.id === selected ? 'selected' : ''}>${e.label}</option>`).join('')}</select></div><div class="field search-field"><label for="archive-search">Caută în arhivă</label><input id="archive-search" type="search" placeholder="Luna sau anul…"></div></form><p class="archive-explainer">Materialele sunt exemple de prezentare. Fișierele oficiale vor fi adăugate după publicare.</p><div id="edition-results" class="edition-list" aria-live="polite"></div></div>`;
+  $('#main').innerHTML = `<div class="wrap archive-page">${title('Arhivă','O ediție pe lună. Problemele și soluțiile, la un loc.')}<form class="filter-bar" id="archive-filters"><div class="field archive-select"><label for="archive-edition">Ediția lunară</label><select id="archive-edition"><option value="">Toate edițiile</option>${D.editions.map(e => `<option value="${e.id}" ${e.id === selected ? 'selected' : ''}>${e.label}</option>`).join('')}</select></div><div class="field search-field"><label for="archive-search">Caută în arhivă</label><input id="archive-search" type="search" placeholder="Luna sau anul…" value="${escapeHTML(params().get('cauta') || '')}"></div></form><p class="archive-explainer">Materialele sunt exemple de prezentare. Fișierele oficiale vor fi adăugate după publicare.</p><div class="archive-status"><p id="archive-count" role="status"></p><button type="button" class="text-link" id="reset-archive" hidden>Resetează filtrele</button></div><div id="edition-results" class="edition-list" aria-live="polite"></div></div>`;
   const update = () => {
-    const id = $('#archive-edition').value, q = $('#archive-search').value.trim().toLocaleLowerCase('ro');
-    history.replaceState(null, '', '#/arhiva' + (id ? '?editie=' + id : ''));
+    const id = $('#archive-edition').value, query = $('#archive-search').value.trim(), q = query.toLocaleLowerCase('ro');
+    const filters = new URLSearchParams();
+    if (id) filters.set('editie',id);
+    if (query) filters.set('cauta',query);
+    history.replaceState(null, '', '#/arhiva' + (filters.size ? '?' + filters : ''));
     const editions = D.editions.filter(e => (!id || e.id === id) && (!q || e.label.toLocaleLowerCase('ro').includes(q)));
+    $('#archive-count').textContent = editions.length === 1 ? 'O ediție' : `${editions.length} ediții`;
+    $('#reset-archive').hidden = !id && !q;
+    document.querySelectorAll('#edition-results .reveal').forEach(element => revealObserver?.unobserve(element));
     $('#edition-results').innerHTML = editions.length ? editions.map(editionCard).join('') : '<div class="empty-state"><h2>Nicio ediție găsită</h2><p>Încearcă o altă lună sau un alt an.</p></div>';
+    revealContent();
   };
   $('#archive-filters').onsubmit = e => e.preventDefault();
   $('#archive-filters').oninput = update;
+  $('#reset-archive').onclick = () => {
+    $('#archive-edition').value = '';
+    $('#archive-search').value = '';
+    update();
+    $('#archive-search').focus();
+  };
   update();
 }
 function categorySelect(id, selected) {
@@ -100,7 +140,7 @@ function practice() {
     const id = $('#practice-category').value;
     history.replaceState(null, '', '#/antrenament' + (id ? '?categorie=' + id : ''));
     const categories = D.categories.filter(c => !id || c.id === id);
-    $('#practice-results').innerHTML = categories.map(c => `<section class="practice-group"><h2>Clasele ${c.label}</h2>${D.practice.filter(p => c.grades.includes(p.grade)).map(p => `<article class="practice-problem"><h3>${escapeHTML(p.title)}</h3><p>${escapeHTML(p.statement)}</p><details class="solution"><summary>Vezi soluția</summary>${p.solution}</details></article>`).join('')}</section>`).join('');
+    $('#practice-results').innerHTML = categories.map(c => `<section class="practice-group"><h2>Clasele ${c.label}</h2>${D.practice.filter(p => c.grades.includes(p.grade)).map(p => `<article class="practice-problem"><h3>${escapeHTML(p.title)}</h3><p class="problem-topic">${escapeHTML(p.topic)}</p><p>${escapeHTML(p.statement)}</p><details class="solution"><summary>Vezi soluția</summary>${p.solution}</details></article>`).join('')}</section>`).join('');
   };
   $('#practice-filters').onsubmit = e => e.preventDefault();
   $('#practice-filters').oninput = update;
@@ -118,7 +158,7 @@ function ranking() {
     const results = (isDemo ? D.demoResults : official).filter(r => r.edition === edition && categories.some(c => c.grades.includes(r.grade))).sort((a,b) => a.grade - b.grade || a.rank - b.rank);
     $('#ranking-results').innerHTML = `${isDemo ? '<div class="notice">Clasament demonstrativ. Numele, instituțiile și punctajele sunt fictive. Pozițiile sunt stabilite în cadrul fiecărei categorii.</div>' : ''}<div class="results-info"><span>Ediția ${editionLabel(edition)} · ${results.length} participanți</span>${results.length ? '<button class="text-link export-button" id="export-csv">Descarcă CSV ↓</button>' : ''}</div>${categories.map(c => {
       const rows = results.filter(r => c.grades.includes(r.grade)).sort((a,b) => a.rank - b.rank);
-      return `<section class="ranking-group"><h2>Clasele ${c.label}</h2>${rows.length ? `<div class="table-scroll"><table><caption class="sr-only">${isDemo ? 'Exemplu de clasament' : 'Rezultatele concursului'} · ${editionLabel(edition)} · clasele ${c.label}</caption><thead><tr><th scope="col">Loc</th><th scope="col">Participant</th><th scope="col">Clasa</th><th scope="col">Instituție</th><th scope="col">Punctaj</th><th scope="col">Distincție</th></tr></thead><tbody>${rows.map(r => `<tr><td>${escapeHTML(r.rank)}</td><td>${escapeHTML(r.name)}</td><td>${escapeHTML(grades[r.grade])}</td><td>${escapeHTML(r.school)}</td><td>${escapeHTML(r.score)}</td><td>${escapeHTML(r.award || '—')}</td></tr>`).join('')}</tbody></table></div>` : '<p class="notice">Rezultatele acestei categorii vor fi publicate după concurs.</p>'}</section>`;
+      return `<section class="ranking-group"><h2>Clasele ${c.label}</h2>${rows.length ? `<div class="table-scroll"><table><caption class="sr-only">${isDemo ? 'Exemplu de clasament' : 'Rezultatele concursului'} · ${editionLabel(edition)} · clasele ${c.label}</caption><thead><tr><th scope="col">Loc</th><th scope="col">Participant</th><th scope="col">Clasa</th><th scope="col">Instituție</th><th scope="col">Punctaj</th><th scope="col">Distincție</th></tr></thead><tbody>${rows.map(r => `<tr class="${r.rank <= 3 ? 'top-result' : ''} ${!r.award || r.award === '—' ? 'no-award' : ''}"><td><span class="rank-number">${escapeHTML(r.rank)}</span></td><td>${escapeHTML(r.name)}</td><td>${escapeHTML(grades[r.grade])}</td><td>${escapeHTML(r.school)}</td><td><span class="score-value">${escapeHTML(r.score)}</span></td><td>${escapeHTML(r.award || '—')}</td></tr>`).join('')}</tbody></table></div>` : '<p class="notice">Rezultatele acestei categorii vor fi publicate după concurs.</p>'}</section>`;
     }).join('')}`;
     if ($('#export-csv')) $('#export-csv').onclick = () => {
       const quote = s => '"' + String(s ?? '').replace(/"/g,'""') + '"';
@@ -139,3 +179,5 @@ function about() {
 function notFound() {
   $('#main').innerHTML = `<div class="wrap archive-page">${title('Pagină negăsită','Revino la arhivă pentru edițiile concursului.')}<a class="button" href="#/">Pagina principală</a></div>`;
 }
+
+init();
