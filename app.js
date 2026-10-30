@@ -53,7 +53,7 @@ function title(h, p) {
 function home() {
   $('#main').innerHTML = `<div class="wrap">
     <section class="hero">
-      <div class="hero-copy"><h1 class="reveal">Pascal</h1><p class="reveal"><strong>Concurs lunar de matematică</strong>O ediție în fiecare lună, pentru elevii cărora le plac problemele și ideile bune.</p><a class="button pink reveal" href="#/arhiva">Descoperă arhiva</a></div>
+      <div class="hero-copy"><h1 class="reveal">Pascal</h1><p class="reveal"><strong>Concurs lunar de matematică</strong>O ediție în fiecare lună, pentru elevii cărora le plac problemele și ideile bune.</p><a class="button accent reveal" href="#/arhiva">Descoperă arhiva</a></div>
       <div class="hero-format"><h2 class="reveal">Categorii de clase</h2><div class="category-list">${D.categories.map(c => `<a class="reveal" href="#/antrenament?categorie=${c.id}" aria-label="Antrenament · clasele ${c.label}">${c.label}</a>`).join('')}</div><p class="reveal">Calendarul și detaliile de participare vor fi anunțate de organizatori.</p></div>
     </section>
     <section class="home-section"><div class="section-head"><h2 class="reveal">Edițiile lunare</h2><p class="reveal">Problemele și soluțiile fiecărei ediții, în PDF-uri separate.</p></div><div class="edition-list">${D.editions.map(editionCard).join('')}</div></section>
