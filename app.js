@@ -128,15 +128,19 @@ function route() {
     history.replaceState(null,'','#/arhiva' + (edition ? '?editie=' + edition : ''));
     page = 'arhiva';
   }
+  if (page === 'despre') {
+    history.replaceState(null,'','#/despre-concurs');
+    page = 'despre-concurs';
+  }
   const previous = currentPage;
   currentPage = page;
   revealObserver?.disconnect();
   closeMenu();
-  const routes = {'':home,arhiva:archive,antrenament:practice,clasament:ranking,despre:about,'despre-concurs':contestAbout};
+  const routes = {'':home,arhiva:archive,antrenament:practice,clasament:ranking,'despre-concurs':contestAbout};
   (routes[page] || notFound)();
   revealContent();
   document.querySelectorAll('#navigation a').forEach(link => link.getAttribute('href') === '#/' + page ? link.setAttribute('aria-current','page') : link.removeAttribute('aria-current'));
-  const titles = {'':'contest',arhiva:'archive',antrenament:'practice',clasament:'ranking',despre:'aboutVersion','despre-concurs':'about'};
+  const titles = {'':'contest',arhiva:'archive',antrenament:'practice',clasament:'ranking','despre-concurs':'about'};
   document.title = 'Pascal — ' + t(titles[page] || 'notFound');
   renderedUrl = location.href;
   renderedLanguage = language;
@@ -191,7 +195,7 @@ function upcomingEdition(edition, heading = 'h2') {
 }
 function editionCard(edition) {
   if (edition.status === 'upcoming') return upcomingEdition(edition,'h3');
-  return `<article class="edition-entry reveal" id="editia-${edition.id}"><div><h3>${editionLabel(edition)}</h3><p>${t('demoPdfs')}</p></div><div class="edition-actions" data-ui>${pdfLink(edition,'problems')}${pdfLink(edition,'solutions')}${edition.practicePdf ? pdfLink(edition,'practice') : ''}</div></article>`;
+  return `<article class="edition-entry reveal" id="editia-${edition.id}"><div><h3>${editionLabel(edition)}</h3><p>${t('editionMaterials')}</p></div><div class="edition-actions" data-ui>${pdfLink(edition,'problems')}${pdfLink(edition,'solutions')}${edition.practicePdf ? pdfLink(edition,'practice') : ''}</div></article>`;
 }
 function editionOptions(selected, includeAll = false) {
   return `${includeAll ? `<option value="">${t('allEditions')}</option>` : ''}${D.editions.map(edition => `<option value="${edition.id}" ${edition.id === selected ? 'selected' : ''}>${editionLabel(edition)}</option>`).join('')}`;
@@ -265,9 +269,6 @@ function ranking() {
   $('#ranking-filters').onsubmit = event => event.preventDefault();
   $('#ranking-filters').oninput = update;
   update();
-}
-function about() {
-  $('#main').innerHTML = `<div class="wrap">${title(t('aboutSite'),t('aboutSiteIntro'))}<div class="about-copy"><h2>${t('presentation')}</h2><p>${t('presentationFormat')}</p><p>${t('presentationPdfs')}</p><p>${t('presentationPractice')}</p><h2>${t('officialMaterials')}</h2><p>${t('officialMaterialsIntro')}</p><p>${t('presentationRanking')}</p><p><a class="button" href="#/arhiva">${t('exploreArchive')}</a></p></div></div>`;
 }
 function notFound() {
   $('#main').innerHTML = `<div class="wrap archive-page">${title(t('notFound'),t('notFoundIntro'))}<a class="button" href="#/">${t('home')}</a></div>`;
