@@ -158,7 +158,7 @@ function home() {
       <div class="hero-copy"><h1 class="reveal">Pascal</h1><p class="reveal"><strong>${t('contest')}</strong>${t('heroIntro')}</p><a class="button accent reveal" href="#/arhiva">${t('discoverArchive')}</a></div>
       <div class="hero-format"><h2 class="reveal">${t('categories')}</h2><div class="category-list">${D.categories.map(category => `<a class="reveal" href="#/antrenament?categorie=${category.id}" aria-label="${t('practiceCategory',{classes:categoryTitle(category)})}"><span class="category-grade">${categoryLabel(category)}</span><span class="category-action">${t('practice')}</span></a>`).join('')}</div><p class="reveal">${t('calendar')}</p></div>
     </section>
-    <section class="home-section"><div class="section-head"><h2 class="reveal">${t('monthlyEditions')}</h2><p class="reveal">${t('editionsIntro')}</p></div><div class="edition-list">${D.editions.map(editionCard).join('')}</div></section>
+    <section class="home-section"><div class="section-head"><h2 class="reveal">${t('firstEdition')}</h2><p class="reveal">${t('firstEditionIntro')}</p></div><div class="edition-list">${D.editions.map(editionCard).join('')}</div></section>
     <section class="about-section" aria-labelledby="about-heading"><h2 class="reveal" id="about-heading">${t('about')}</h2><div class="about-text"><p class="reveal">${t('aboutSummary')}</p><a class="text-link reveal" href="#/despre-concurs">${t('readAbout')} <span aria-hidden="true">↗</span></a></div></section>
     <section class="resource-band"><div><h2 class="reveal">${t('practice')}</h2><p class="reveal">${t('practiceIntroHome')}</p></div><div class="resource-links"><a class="resource-link reveal" href="#/antrenament"><div><h3>${t('practiceProblems')}</h3><p>${t('practiceCategories')}</p></div><span aria-hidden="true">↗</span></a><a class="resource-link reveal" href="#/clasament"><div><h3>${t('ranking')}</h3><p>${t('rankingCategories')}</p></div><span aria-hidden="true">↗</span></a></div></section>
     <section class="challenge" aria-labelledby="challenge-heading"><div class="challenge-copy"><h2 class="reveal" id="challenge-heading">${t('challenge')}</h2><p class="reveal">${t('challengeStatement')}</p><p class="sample-label">${t('challengeSample')}</p></div><div class="challenge-answer reveal"><form id="challenge-form" novalidate><label for="challenge-answer">${t('challengeQuestion')}</label><div class="answer-controls"><input id="challenge-answer" name="raspuns" type="number" min="0" step="1" required inputmode="numeric" placeholder="${t('answerPlaceholder')}"><button class="button" type="submit">${t('check')}</button></div><p id="answer-feedback" class="answer-feedback" role="status"></p></form><details class="solution" id="challenge-solution"><summary>${t('showSolution')}</summary>${challenge.solution}</details></div></section>
@@ -186,13 +186,21 @@ function pdfLink(edition, type) {
   const context = `${text} · ${editionLabel(edition)}`;
   return safePath ? `<a class="button${variant}" href="${escapeHTML(path)}" target="_blank" rel="noopener" aria-label="${context} (${t('newTab')})">${text}</a>` : `<button class="button${variant}" disabled aria-label="${context}, ${t('unavailable')}">${text}</button>`;
 }
+function upcomingEdition(edition, heading = 'h2') {
+  return `<article class="upcoming-edition reveal"><div><${heading}>${editionLabel(edition)}</${heading}><p class="upcoming-status">${t('comingSoon')}</p></div><div class="about-text"><p>${t('upcomingDetails')}</p><p>${t('upcomingMaterials')}</p></div></article>`;
+}
 function editionCard(edition) {
+  if (edition.status === 'upcoming') return upcomingEdition(edition,'h3');
   return `<article class="edition-entry reveal" id="editia-${edition.id}"><div><h3>${editionLabel(edition)}</h3><p>${t('demoPdfs')}</p></div><div class="edition-actions" data-ui>${pdfLink(edition,'problems')}${pdfLink(edition,'solutions')}${edition.practicePdf ? pdfLink(edition,'practice') : ''}</div></article>`;
 }
 function editionOptions(selected, includeAll = false) {
   return `${includeAll ? `<option value="">${t('allEditions')}</option>` : ''}${D.editions.map(edition => `<option value="${edition.id}" ${edition.id === selected ? 'selected' : ''}>${editionLabel(edition)}</option>`).join('')}`;
 }
 function archive() {
+  if (D.editions.every(edition => edition.status === 'upcoming')) {
+    $('#main').innerHTML = `<div class="wrap archive-page">${title(t('archive'),t('archiveIntro'))}${D.editions.map(edition => upcomingEdition(edition)).join('')}</div>`;
+    return;
+  }
   const selected = params().has('editie') ? selectedEdition() : '';
   $('#main').innerHTML = `<div class="wrap archive-page">${title(t('archive'),t('archiveIntro'))}<form class="filter-bar" id="archive-filters"><div class="field archive-select"><label for="archive-edition">${t('monthlyEdition')}</label><select id="archive-edition">${editionOptions(selected,true)}</select></div><div class="field search-field"><label for="archive-search">${t('searchArchive')}</label><input id="archive-search" type="search" placeholder="${t('searchPlaceholder')}" value="${escapeHTML(params().get('cauta') || '')}"></div></form><p class="archive-explainer">${t('archiveExplainer')}</p><div class="archive-status"><p id="archive-count" role="status"></p><button type="button" class="text-link" id="reset-archive" hidden>${t('resetFilters')}</button></div><div id="edition-results" class="edition-list" aria-live="polite"></div></div>`;
   const update = () => {

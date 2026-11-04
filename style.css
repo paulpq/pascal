@@ -71,6 +71,9 @@ svg { display: block; fill: currentColor; }
 .section-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 40px; margin-bottom: 32px; }
 .section-head p { max-width: 34ch; font-size: 16px; }
 .edition-list { display: grid; gap: 12px; }
+.upcoming-edition { display: grid; grid-template-columns: 1fr 1.25fr; gap: 76px; padding: 48px; background: var(--accent-soft); border-radius: var(--radius); }
+.upcoming-edition h2, .upcoming-edition h3 { font-size: var(--heading); }
+.upcoming-status { margin-top: 20px; font-weight: 600; color: var(--green); }
 .edition-entry { display: flex; align-items: center; justify-content: space-between; gap: 32px; padding: 28px 32px; background: var(--surface); border-radius: var(--radius); }
 .edition-entry h3 { font-size: 36px; }
 .edition-entry p { font-size: 14px; color: var(--muted); margin-top: 8px; }
@@ -181,6 +184,7 @@ td:nth-child(2) { font-weight: 500; }
   .category-grade { font-size: 34px; }
   .about-section, .challenge { gap: 44px; padding: 40px; }
   .resource-band { gap: 48px; }
+  .upcoming-edition { padding: 40px; gap: 44px; }
   .edition-entry { padding: 26px 28px; }
   th, td { padding: 18px; }
 }
@@ -239,6 +243,8 @@ td:nth-child(2) { font-weight: 500; }
   .home-section { padding-top: 64px; }
   .section-head { flex-direction: column; gap: 20px; margin-bottom: 26px; }
   .section-head p { max-width: none; }
+  .upcoming-edition { grid-template-columns: 1fr; gap: 28px; padding: 28px 24px; }
+  .upcoming-status { margin-top: 16px; }
   .edition-entry { flex-direction: column; align-items: flex-start; padding: 26px 24px; gap: 24px; }
   .edition-entry h3 { font-size: 32px; }
   .edition-entry p { font-size: 14px; }
