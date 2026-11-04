@@ -22,7 +22,7 @@ window.PASCAL_I18N = {
     "monthlyEditions": "Edițiile lunare",
     "editionsIntro": "Problemele și soluțiile fiecărei ediții, în PDF-uri separate.",
     "aboutTagline": "O ediție în fiecare lună · două etape",
-    "aboutPurpose": "Concursul Pascal este o competiție lunară de matematică, organizată pentru toate clasele gimnaziale și liceale. Pascal are ca scop încurajarea participării copiilor la diverse concursuri, pentru a se antrena pentru olimpiade și pentru a le trezi pasiunea pentru matematică.",
+    "aboutPurpose": "Scopul principal al concursului Pascal este intensificarea competiției la olimpiadele de matematică între elevii din Moldova.",
     "aboutStages": "Concursul are loc în fiecare lună, cu două etape pentru fiecare ediție: o etapă online și o etapă la Liceul Teoretic Orizont Durlești, la distanță de două săptămâni între ele.",
     "aboutSelection": "Elevii selectați în urma etapei online participă la etapa a doua, desfășurată la liceu.",
     "practiceIntroHome": "Pregătește-te cu probleme din categoria ta. Materialele pentru o ediție vor apărea înaintea concursului, după publicarea lor de către organizatori.",
@@ -107,7 +107,14 @@ window.PASCAL_I18N = {
       "Octombrie",
       "Noiembrie",
       "Decembrie"
-    ]
+    ],
+    "aboutIntro": "O competiție lunară pentru elevii claselor gimnaziale și liceale din Moldova.",
+    "purposeTitle": "Scop și obiective",
+    "aboutObjectives": "Printre obiectivele sale se numără îmbunătățirea pregătirii pentru Olimpiada Republicană de Matematică și pentru barajele de selecție ale loturilor olimpice. Mai presus de toate, concursul își propune să consolideze un mediu competitiv bine dezvoltat la nivel național, pentru elevii tuturor claselor gimnaziale și liceale.",
+    "aboutSummary": "Pascal încurajează competiția matematică între elevii din Moldova și îi ajută să se pregătească pentru olimpiade, într-un mediu competitiv la nivel național.",
+    "readAbout": "Mai multe despre concurs",
+    "formatTitle": "Două etape",
+    "aboutMaterials": "Problemele și soluțiile fiecărei ediții se păstrează în arhivă, iar rezultatele se publică după concurs, pe categorii de clase."
   },
   "ru": {
     "skip": "Перейти к содержанию",
@@ -131,7 +138,7 @@ window.PASCAL_I18N = {
     "monthlyEditions": "Ежемесячные конкурсы",
     "editionsIntro": "Задачи и решения каждого конкурса в отдельных PDF-файлах.",
     "aboutTagline": "Каждый месяц · два этапа",
-    "aboutPurpose": "Pascal — ежемесячный математический конкурс для учеников всех гимназических и лицейских классов. Его цель — поощрять участие школьников в конкурсах, помогать им готовиться к олимпиадам и пробуждать интерес к математике.",
+    "aboutPurpose": "Главная цель конкурса Pascal — усилить конкуренцию на математических олимпиадах среди школьников Молдовы.",
     "aboutStages": "Каждый месяц конкурс проходит в два этапа: онлайн и очный этап в Теоретическом лицее Orizont в Дурлештах. Между этапами — две недели.",
     "aboutSelection": "По итогам онлайн-этапа отбираются ученики, которые примут участие во втором этапе в лицее.",
     "practiceIntroHome": "Готовься с задачами своей категории. Материалы для подготовки к каждому конкурсу появятся до конкурса, после публикации организаторами.",
@@ -254,6 +261,13 @@ window.PASCAL_I18N = {
         "statement": "Из группы из 8 учеников выбирают команду из 3 человек без распределения ролей. Сколько разных команд можно составить?",
         "solution": "<p>Есть 8 × 7 × 6 упорядоченных вариантов. Каждая команда посчитана 3 × 2 × 1 раз — по числу перестановок её участников.</p><p>Значит, количество команд равно 336 / 6 = <strong>56</strong>.</p>"
       }
-    }
+    },
+    "aboutIntro": "Ежемесячный конкурс для учеников гимназических и лицейских классов Молдовы.",
+    "purposeTitle": "Цель и задачи",
+    "aboutObjectives": "Среди его задач — улучшение подготовки к Республиканской олимпиаде по математике и отборочным соревнованиям в олимпиадные сборные. Прежде всего конкурс стремится укрепить развитую конкурентную среду на национальном уровне для учеников всех гимназических и лицейских классов.",
+    "aboutSummary": "Pascal развивает математическую конкуренцию среди школьников Молдовы и помогает им готовиться к олимпиадам, укрепляя конкурентную среду на национальном уровне.",
+    "readAbout": "Подробнее о конкурсе",
+    "formatTitle": "Два этапа",
+    "aboutMaterials": "Задачи и решения каждого конкурса сохраняются в архиве, а результаты публикуются после конкурса по категориям классов."
   }
 };

@@ -132,7 +132,7 @@ function route() {
   currentPage = page;
   revealObserver?.disconnect();
   closeMenu();
-  const routes = {'':home,arhiva:archive,antrenament:practice,clasament:ranking,despre:about,'despre-concurs':home};
+  const routes = {'':home,arhiva:archive,antrenament:practice,clasament:ranking,despre:about,'despre-concurs':contestAbout};
   (routes[page] || notFound)();
   revealContent();
   document.querySelectorAll('#navigation a').forEach(link => link.getAttribute('href') === '#/' + page ? link.setAttribute('aria-current','page') : link.removeAttribute('aria-current'));
@@ -141,7 +141,6 @@ function route() {
   renderedUrl = location.href;
   renderedLanguage = language;
   if (previous !== page) { window.scrollTo({top:0,left:0,behavior:'instant'}); $('#main').focus({preventScroll:true}); }
-  if (page === 'despre-concurs') requestAnimationFrame(() => $('#despre-concurs').scrollIntoView({behavior:'instant',block:'start'}));
 }
 function title(heading, intro) {
   return `<div class="page-intro"><h1 class="reveal">${heading}</h1><p class="reveal">${intro}</p></div>`;
@@ -160,7 +159,7 @@ function home() {
       <div class="hero-format"><h2 class="reveal">${t('categories')}</h2><div class="category-list">${D.categories.map(category => `<a class="reveal" href="#/antrenament?categorie=${category.id}" aria-label="${t('practiceCategory',{classes:categoryTitle(category)})}"><span class="category-grade">${categoryLabel(category)}</span><span class="category-action">${t('practice')}</span></a>`).join('')}</div><p class="reveal">${t('calendar')}</p></div>
     </section>
     <section class="home-section"><div class="section-head"><h2 class="reveal">${t('monthlyEditions')}</h2><p class="reveal">${t('editionsIntro')}</p></div><div class="edition-list">${D.editions.map(editionCard).join('')}</div></section>
-    <section class="about-section" id="despre-concurs" aria-labelledby="about-heading"><div><h2 class="reveal" id="about-heading">${t('about')}</h2><p class="about-tagline reveal">${t('aboutTagline')}</p></div><div class="about-text"><p class="reveal">${t('aboutPurpose')}</p><p class="reveal">${t('aboutStages')}</p><p class="reveal">${t('aboutSelection')}</p></div></section>
+    <section class="about-section" aria-labelledby="about-heading"><h2 class="reveal" id="about-heading">${t('about')}</h2><div class="about-text"><p class="reveal">${t('aboutSummary')}</p><a class="text-link reveal" href="#/despre-concurs">${t('readAbout')} <span aria-hidden="true">↗</span></a></div></section>
     <section class="resource-band"><div><h2 class="reveal">${t('practice')}</h2><p class="reveal">${t('practiceIntroHome')}</p></div><div class="resource-links"><a class="resource-link reveal" href="#/antrenament"><div><h3>${t('practiceProblems')}</h3><p>${t('practiceCategories')}</p></div><span aria-hidden="true">↗</span></a><a class="resource-link reveal" href="#/clasament"><div><h3>${t('ranking')}</h3><p>${t('rankingCategories')}</p></div><span aria-hidden="true">↗</span></a></div></section>
     <section class="challenge" aria-labelledby="challenge-heading"><div class="challenge-copy"><h2 class="reveal" id="challenge-heading">${t('challenge')}</h2><p class="reveal">${t('challengeStatement')}</p><p class="sample-label">${t('challengeSample')}</p></div><div class="challenge-answer reveal"><form id="challenge-form" novalidate><label for="challenge-answer">${t('challengeQuestion')}</label><div class="answer-controls"><input id="challenge-answer" name="raspuns" type="number" min="0" step="1" required inputmode="numeric" placeholder="${t('answerPlaceholder')}"><button class="button" type="submit">${t('check')}</button></div><p id="answer-feedback" class="answer-feedback" role="status"></p></form><details class="solution" id="challenge-solution"><summary>${t('showSolution')}</summary>${challenge.solution}</details></div></section>
   </div>`;
@@ -170,6 +169,13 @@ function home() {
     if (raw === '' || !Number.isInteger(answer) || answer < 0) { showChallengeFeedback('invalidAnswer'); $('#challenge-answer').focus(); return; }
     showChallengeFeedback(answer === 10 ? 'correct' : 'incorrect');
   };
+}
+function contestAbout() {
+  $('#main').innerHTML = `<div class="wrap contest-about-page">
+    ${title(t('about'),t('aboutIntro'))}
+    <section class="contest-purpose" aria-labelledby="purpose-heading"><h2 class="reveal" id="purpose-heading">${t('purposeTitle')}</h2><div class="about-text"><p class="reveal">${t('aboutPurpose')}</p><p class="reveal">${t('aboutObjectives')}</p></div></section>
+    <section class="about-section contest-format" aria-labelledby="format-heading"><div><h2 class="reveal" id="format-heading">${t('formatTitle')}</h2><p class="about-tagline reveal">${t('aboutTagline')}</p></div><div class="about-text"><p class="reveal">${t('aboutStages')}</p><p class="reveal">${t('aboutSelection')}</p><p class="reveal">${t('aboutMaterials')}</p><a class="text-link reveal" href="#/arhiva">${t('exploreArchive')} <span aria-hidden="true">↗</span></a></div></section>
+  </div>`;
 }
 function pdfLink(edition, type) {
   const rawPath = ({problems:edition.problemsPdf,solutions:edition.solutionsPdf,practice:edition.practicePdf})[type];
