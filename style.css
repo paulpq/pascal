@@ -289,10 +289,10 @@ td:nth-child(2) { font-weight: 500; }
   td:nth-child(1) { grid-column: 1; grid-row: 1 / 4; align-self: start; }
   td:nth-child(2) { grid-column: 2; grid-row: 1; font-size: 16px; line-height: 1.4; }
   td:nth-child(3) { grid-column: 2; grid-row: 2; font-size: 14px; color: var(--muted); }
-  td:nth-child(3)::before { content: 'Clasa '; }
+  td:nth-child(3)::before { content: attr(data-grade-prefix); }
   td:nth-child(4) { grid-column: 2; grid-row: 3; font-size: 14px; color: var(--muted); line-height: 1.5; }
   td:nth-child(5) { grid-column: 3; grid-row: 1 / 4; text-align: right; line-height: 1.2; }
-  td:nth-child(5)::after { content: 'puncte'; display: block; font-size: 14px; margin-top: 6px; color: var(--muted); }
+  td:nth-child(5)::after { content: attr(data-score-unit); display: block; font-size: 14px; margin-top: 6px; color: var(--muted); }
   td:nth-child(6) { grid-column: 2 / 4; grid-row: 4; font-size: 14px; color: var(--muted); margin-top: 6px; }
   .score-value { font-size: 28px; }
   .no-award td:nth-child(6) { display: none; }
@@ -317,4 +317,34 @@ td:nth-child(2) { font-weight: 500; }
   body { background: white; }
   .table-scroll { overflow: visible; }
   th, td { white-space: normal; }
+}
+
+/* Language controls stay available in the header at every width. */
+html[lang="ru"] { --sans: 'Noto Sans', sans-serif; }
+.header-tools { display: flex; align-items: center; gap: 24px; }
+.language-switch { display: inline-flex; align-items: center; gap: 2px; padding: 3px; border-radius: 6px; background: var(--surface); flex-shrink: 0; }
+.language-switch button { border: 0; border-radius: 4px; background: transparent; min-width: 38px; min-height: 38px; padding: 6px; font-size: 14px; font-weight: 600; transition: background .2s, color .2s; }
+.language-switch button:hover { background: var(--accent-soft); }
+.language-switch button[aria-pressed="true"] { background: var(--ink); color: var(--accent-soft); }
+html[lang="ru"] .hero-copy strong { font-size: 22px; }
+html[lang="ru"] .edition-actions .button { white-space: nowrap; }
+@media (max-width: 950px) {
+  .site-header { height: 84px; gap: 16px; }
+  .brand { font-size: 28px; gap: 6px; }
+  .brand-logo { width: 58px; height: 46px; }
+  .header-tools { order: 1; margin-left: auto; }
+  .menu-toggle { display: flex; order: 2; align-items: center; gap: 12px; padding: 12px 0; background: transparent; border: 0; font-size: 16px; }
+  .site-header nav { display: none; position: absolute; top: 76px; left: 0; right: 0; padding: 16px 24px; background: var(--ink); color: var(--accent-soft); border-radius: 8px; }
+  .site-header nav.open { display: grid; gap: 4px; }
+  .site-header nav a { padding: 12px 0; }
+  .site-header nav :focus-visible { outline-color: var(--accent); }
+}
+@media (max-width: 640px) {
+  .site-header { gap: 10px; }
+  .menu-toggle { gap: 8px; }
+  html[lang="ru"] .hero-copy strong { font-size: 20px; }
+  html[lang="ru"] .page-intro h1 { font-size: clamp(44px, 12vw, 60px); }
+}
+@media (max-width: 360px) {
+  .menu-toggle > span { display: none; }
 }

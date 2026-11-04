@@ -1163,6 +1163,14 @@ window.PASCAL = {
         9,
         10
       ]
+    },
+    {
+      "id": "11-12",
+      "label": "XI–XII",
+      "grades": [
+        11,
+        12
+      ]
     }
   ],
   "practice": [
