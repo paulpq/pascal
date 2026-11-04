@@ -122,6 +122,7 @@ svg { display: block; fill: currentColor; }
 .field.search-field { flex: 1; }
 .field label { font-size: 14px; font-weight: 600; }
 .field input, .field select { width: 100%; height: 52px; padding: 12px 16px; border: 0; border-radius: 5px; background: var(--white); font-size: 16px; }
+.field select { appearance: none; -webkit-appearance: none; padding-right: 44px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%231a2039' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-size: 16px; background-position: right 16px center; }
 .field input::placeholder { color: var(--muted); opacity: 1; }
 .archive-explainer { font-size: 16px; color: var(--muted); }
 .archive-status { display: flex; justify-content: space-between; gap: 24px; align-items: center; min-height: 28px; margin: 28px 0 20px; font-size: 16px; }
@@ -279,6 +280,7 @@ td:nth-child(2) { font-weight: 500; }
   .field { min-width: 0; flex: 1; }
   .search-field, .archive-select { flex-basis: 100%; }
   .field select, .field input { padding: 12px; font-size: 16px; }
+  .field select { padding-right: 44px; }
   .archive-explainer, .archive-status, .text-link { font-size: 14px; }
   .archive-status { gap: 16px; margin-top: 24px; }
   .empty-state { padding: 36px 24px; }
