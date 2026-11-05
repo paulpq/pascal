@@ -1,5 +1,5 @@
-// First edition: December 2026. Add official PDFs and results after publication.
-// Practice examples are independent of the contest archive.
+// Contest configuration. Publish confirmed dates, form links and results here.
+// Each result uses edition, stage (online or final), grade, rank, name, school, problemScores, score and award.
 window.PASCAL = {
   "editions": [
     {
@@ -10,7 +10,24 @@ window.PASCAL = {
       "monthName": "Decembrie",
       "label": "Decembrie 2026",
       "year": 2026,
-      "status": "upcoming"
+      "status": "upcoming",
+      "registrationUrl": null,
+      "registrationDeadline": null,
+      "problemCount": null,
+      "stages": [
+        {
+          "id": "online",
+          "date": null,
+          "problemsPdf": null,
+          "solutionsPdf": null
+        },
+        {
+          "id": "final",
+          "date": null,
+          "problemsPdf": null,
+          "solutionsPdf": null
+        }
+      ]
     }
   ],
   "problems": [],
@@ -112,6 +129,29 @@ window.PASCAL = {
       "statement": "Dintr-un grup de 8 elevi alegem o echipă de 3 elevi, fără roluri distincte. Câte echipe diferite putem forma?",
       "answer": 56,
       "solution": "<p>Avem 8 × 7 × 6 alegeri ordonate. Fiecare echipă este numărată de 3 × 2 × 1 ori, pentru toate ordonările celor trei elevi.</p><p>Prin urmare, numărul echipelor este 336 / 6 = <strong>56</strong>.</p>"
+    }
+  ],
+  "contact": {
+    "organizers": [],
+    "email": null
+  },
+  "rulesPdfs": {
+    "ro": "pdf/pascal-participare-ro.pdf",
+    "ru": "pdf/pascal-participare-ru.pdf"
+  },
+  "news": [
+    {
+      "id": "prima-editie",
+      "date": "2026-11-04",
+      "title": {
+        "ro": "Prima ediție în decembrie",
+        "ru": "Первый конкурс в декабре"
+      },
+      "body": {
+        "ro": "Pascal începe în decembrie 2026, cu o etapă online și o finală la Liceul Teoretic Orizont Durlești, două săptămâni mai târziu. Data exactă, înscrierile și regulamentul complet vor fi anunțate aici.",
+        "ru": "Pascal стартует в декабре 2026 года. Сначала пройдёт онлайн-этап, а через две недели — финал в Теоретическом лицее Orizont в Дурлештах. Точная дата, регистрация и полные правила будут объявлены здесь."
+      },
+      "edition": "2026-12"
     }
   ]
 };

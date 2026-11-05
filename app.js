@@ -63,6 +63,7 @@ function syncChrome() {
   document.querySelectorAll('[data-i18n-aria]').forEach(element => { element.setAttribute('aria-label',t(element.dataset.i18nAria)); });
   document.querySelectorAll('[data-language]').forEach(button => { button.setAttribute('aria-pressed',String(button.dataset.language === language)); });
   $('meta[name="description"]').content = t('meta');
+  syncContact();
 }
 function changeLanguage(nextLanguage) {
   if (nextLanguage === language) return;
@@ -136,12 +137,12 @@ function route() {
   currentPage = page;
   revealObserver?.disconnect();
   closeMenu();
-  const routes = {'':home,arhiva:archive,antrenament:practice,clasament:ranking,'despre-concurs':contestAbout};
+  const routes = {'':home,arhiva:archive,antrenament:practice,clasament:ranking,'despre-concurs':contestAbout,inscriere:registrationPage,regulament:rulesPage,noutati:newsPage,editie:editionPage};
   (routes[page] || notFound)();
   revealContent();
-  document.querySelectorAll('#navigation a').forEach(link => link.getAttribute('href') === '#/' + page ? link.setAttribute('aria-current','page') : link.removeAttribute('aria-current'));
-  const titles = {'':'contest',arhiva:'archive',antrenament:'practice',clasament:'ranking','despre-concurs':'about'};
-  document.title = 'Pascal — ' + t(titles[page] || 'notFound');
+  document.querySelectorAll('#navigation a').forEach(link => link.getAttribute('href') === '#/' + (page === 'editie' ? 'arhiva' : page) ? link.setAttribute('aria-current','page') : link.removeAttribute('aria-current'));
+  const titles = {'':'contest',arhiva:'archive',antrenament:'practice',clasament:'ranking','despre-concurs':'about',inscriere:'registration',regulament:'rules',noutati:'news',editie:'monthlyEdition'};
+  document.title = 'Pascal — ' + (page === 'editie' ? $('#main h1').textContent : t(titles[page] || 'notFound'));
   renderedUrl = location.href;
   renderedLanguage = language;
   if (previous !== page) { window.scrollTo({top:0,left:0,behavior:'instant'}); $('#main').focus({preventScroll:true}); }
@@ -159,11 +160,12 @@ function home() {
   const challenge = translatedProblem(D.practice.find(problem => problem.id === 'p2026-6'));
   $('#main').innerHTML = `<div class="wrap">
     <section class="hero">
-      <div class="hero-copy"><h1 class="reveal">Pascal</h1><p class="reveal"><strong>${t('contest')}</strong>${t('heroIntro')}</p><a class="button accent reveal" href="#/arhiva">${t('discoverArchive')}</a></div>
+      <div class="hero-copy"><h1 class="reveal">Pascal</h1><p class="reveal"><strong>${t('contest')}</strong>${t('heroIntro')}</p><a class="button accent reveal" href="#/inscriere">${t('registration')}</a></div>
       <div class="hero-format"><h2 class="reveal">${t('categories')}</h2><div class="category-list">${D.categories.map(category => `<a class="reveal" href="#/antrenament?categorie=${category.id}" aria-label="${t('practiceCategory',{classes:categoryTitle(category)})}"><span class="category-grade">${categoryLabel(category)}</span><span class="category-action">${t('practice')}</span></a>`).join('')}</div><p class="reveal">${t('calendar')}</p></div>
     </section>
     <section class="home-section"><div class="section-head"><h2 class="reveal">${t('firstEdition')}</h2><p class="reveal">${t('firstEditionIntro')}</p></div><div class="edition-list">${D.editions.map(editionCard).join('')}</div></section>
-    <section class="about-section" aria-labelledby="about-heading"><h2 class="reveal" id="about-heading">${t('about')}</h2><div class="about-text"><p class="reveal">${t('aboutSummary')}</p><a class="text-link reveal" href="#/despre-concurs">${t('readAbout')} <span aria-hidden="true">↗</span></a></div></section>
+    <section class="home-section"><div class="section-head"><h2 class="reveal">${t('news')}</h2><a class="text-link reveal" data-ui href="#/noutati">${t('allNews')} <span aria-hidden="true">↗</span></a></div>${newsItems(D.news.slice(0,1))}</section>
+    <section class="about-section" aria-labelledby="about-heading"><h2 class="reveal" id="about-heading">${t('about')}</h2><div class="about-text"><p class="reveal">${t('aboutSummary')}</p><a class="text-link reveal" data-ui href="#/despre-concurs">${t('readAbout')} <span aria-hidden="true">↗</span></a></div></section>
     <section class="resource-band"><div><h2 class="reveal">${t('practice')}</h2><p class="reveal">${t('practiceIntroHome')}</p></div><div class="resource-links"><a class="resource-link reveal" href="#/antrenament"><div><h3>${t('practiceProblems')}</h3><p>${t('practiceCategories')}</p></div><span aria-hidden="true">↗</span></a><a class="resource-link reveal" href="#/clasament"><div><h3>${t('ranking')}</h3><p>${t('rankingCategories')}</p></div><span aria-hidden="true">↗</span></a></div></section>
     <section class="challenge" aria-labelledby="challenge-heading"><div class="challenge-copy"><h2 class="reveal" id="challenge-heading">${t('challenge')}</h2><p class="reveal">${t('challengeStatement')}</p><p class="sample-label">${t('challengeSample')}</p></div><div class="challenge-answer reveal"><form id="challenge-form" novalidate><label for="challenge-answer">${t('challengeQuestion')}</label><div class="answer-controls"><input id="challenge-answer" name="raspuns" type="number" min="0" step="1" required inputmode="numeric" placeholder="${t('answerPlaceholder')}"><button class="button" type="submit">${t('check')}</button></div><p id="answer-feedback" class="answer-feedback" role="status"></p></form><details class="solution" id="challenge-solution"><summary>${t('showSolution')}</summary>${challenge.solution}</details></div></section>
   </div>`;
@@ -178,7 +180,7 @@ function contestAbout() {
   $('#main').innerHTML = `<div class="wrap contest-about-page">
     ${title(t('about'),t('aboutIntro'))}
     <section class="contest-purpose" aria-labelledby="purpose-heading"><h2 class="reveal" id="purpose-heading">${t('purposeTitle')}</h2><div class="about-text"><p class="reveal">${t('aboutPurpose')}</p><p class="reveal">${t('aboutObjectives')}</p></div></section>
-    <section class="about-section contest-format" aria-labelledby="format-heading"><div><h2 class="reveal" id="format-heading">${t('formatTitle')}</h2><p class="about-tagline reveal">${t('aboutTagline')}</p></div><div class="about-text"><p class="reveal">${t('aboutStages')}</p><p class="reveal">${t('aboutSelection')}</p><p class="reveal">${t('aboutMaterials')}</p><a class="text-link reveal" href="#/arhiva">${t('exploreArchive')} <span aria-hidden="true">↗</span></a></div></section>
+    <section class="about-section contest-format" aria-labelledby="format-heading"><div><h2 class="reveal" id="format-heading">${t('formatTitle')}</h2><p class="about-tagline reveal">${t('aboutTagline')}</p></div><div class="about-text"><p class="reveal">${t('aboutStages')}</p><p class="reveal">${t('aboutSelection')}</p><p class="reveal">${t('aboutMaterials')}</p><a class="text-link reveal" data-ui href="#/arhiva">${t('exploreArchive')} <span aria-hidden="true">↗</span></a></div></section>
   </div>`;
 }
 function pdfLink(edition, type) {
@@ -191,7 +193,7 @@ function pdfLink(edition, type) {
   return safePath ? `<a class="button${variant}" href="${escapeHTML(path)}" target="_blank" rel="noopener" aria-label="${context} (${t('newTab')})">${text}</a>` : `<button class="button${variant}" disabled aria-label="${context}, ${t('unavailable')}">${text}</button>`;
 }
 function upcomingEdition(edition, heading = 'h2') {
-  return `<article class="upcoming-edition reveal"><div><${heading}>${editionLabel(edition)}</${heading}><p class="upcoming-status">${t('comingSoon')}</p></div><div class="about-text"><p>${t('upcomingDetails')}</p><p>${t('upcomingMaterials')}</p></div></article>`;
+  return `<article class="upcoming-edition reveal"><div><${heading}>${editionLabel(edition)}</${heading}><p class="upcoming-status">${t('comingSoon')}</p></div><div class="about-text"><p>${t('upcomingDetails')}</p><p>${t('upcomingMaterials')}</p><a class="text-link" data-ui href="#/editie?editie=${edition.id}">${t('viewEdition')} <span aria-hidden="true">↗</span></a></div></article>`;
 }
 function editionCard(edition) {
   if (edition.status === 'upcoming') return upcomingEdition(edition,'h3');
@@ -243,33 +245,7 @@ function practice() {
   $('#practice-filters').oninput = update;
   update();
 }
-function ranking() {
-  $('#main').innerHTML = `<div class="wrap archive-page">${title(t('ranking'),t('rankingIntro'))}<form class="filter-bar" id="ranking-filters"><div class="field"><label for="edition">${t('monthlyEdition')}</label><select id="edition" name="editie">${editionOptions(selectedEdition())}</select></div>${categorySelect('category',selectedCategory())}</form><div id="ranking-results" aria-live="polite"></div></div>`;
-  const update = () => {
-    const edition = $('#edition').value, category = $('#category').value;
-    const filters = new URLSearchParams({editie:edition});
-    if (category) filters.set('categorie',category);
-    history.replaceState(null,'','#/clasament?' + filters);
-    const official = D.results.filter(result => result.edition === edition), isDemo = !official.length;
-    const categories = D.categories.filter(item => !category || item.id === category);
-    const results = (isDemo ? D.demoResults : official).filter(result => result.edition === edition && categories.some(item => item.grades.includes(result.grade)));
-    $('#ranking-results').innerHTML = `${isDemo && results.length ? `<div class="notice">${t('rankingDemo')}</div>` : ''}<div class="results-info"><span>${t('editionResults',{edition:editionLabel(edition),count:participantCount(results.length)})}</span>${results.length ? `<button class="text-link export-button" id="export-csv">${t('csv')}</button>` : ''}</div>${categories.map(item => {
-      const rows = results.filter(result => item.grades.includes(result.grade)).sort((a,b) => a.rank - b.rank);
-      return `<section class="ranking-group"><h2>${categoryTitle(item)}</h2>${rows.length ? `<div class="table-scroll"><table><caption class="sr-only">${t(isDemo ? 'rankingExample' : 'contestResults')} · ${editionLabel(edition)} · ${categoryTitle(item)}</caption><thead><tr>${['rank','participant','grade','school','score','award'].map(key => `<th scope="col">${t(key)}</th>`).join('')}</tr></thead><tbody>${rows.map(result => `<tr class="${result.rank <= 3 ? 'top-result' : ''} ${!result.award || result.award === '—' ? 'no-award' : ''}"><td><span class="rank-number">${escapeHTML(result.rank)}</span></td><td>${escapeHTML(result.name)}</td><td data-grade-prefix="${t('grade')} ">${escapeHTML(gradeLabel(result.grade))}</td><td>${escapeHTML(schoolLabel(result.school))}</td><td data-score-unit="${scoreUnit(result.score)}"><span class="score-value">${escapeHTML(result.score)}</span></td><td>${escapeHTML(awardLabel(result.award))}</td></tr>`).join('')}</tbody></table></div>` : `<p class="notice">${t('resultsPending')}</p>`}</section>`;
-    }).join('')}`;
-    if ($('#export-csv')) $('#export-csv').onclick = () => {
-      const quote = value => '"' + String(value ?? '').replace(/"/g,'""') + '"';
-      const ordered = [...results].sort((a,b) => categoryFor(a.grade).grades[0] - categoryFor(b.grade).grades[0] || a.rank - b.rank);
-      const csv = '\uFEFF' + [['category','rank','participant','grade','school','score','award','resultType'].map(key => t(key)),...ordered.map(result => [categoryLabel(categoryFor(result.grade)),result.rank,result.name,gradeLabel(result.grade),schoolLabel(result.school),result.score,awardLabel(result.award),t(isDemo ? 'demo' : 'official')])].map(row => row.map(quote).join(',')).join('\r\n');
-      const url = URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'})), link = document.createElement('a');
-      link.href = url; link.download = `pascal-clasament-${isDemo ? 'demo-' : ''}${edition}-${language}.csv`; link.click();
-      setTimeout(() => URL.revokeObjectURL(url),1000);
-    };
-  };
-  $('#ranking-filters').onsubmit = event => event.preventDefault();
-  $('#ranking-filters').oninput = update;
-  update();
-}
+function ranking() { rankingPage(); }
 function notFound() {
   $('#main').innerHTML = `<div class="wrap archive-page">${title(t('notFound'),t('notFoundIntro'))}<a class="button" href="#/">${t('home')}</a></div>`;
 }

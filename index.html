@@ -10,10 +10,11 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=EB+Garamond:wght@400;500;600&family=Noto+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=site-copy-1">
-  <script src="data.js?v=site-copy-1" defer></script>
-  <script src="i18n.js?v=site-copy-1" defer></script>
-  <script src="app.js?v=site-copy-1" defer></script>
+  <link rel="stylesheet" href="style.css?v=contest-pages-1">
+  <script src="data.js?v=contest-pages-1" defer></script>
+  <script src="i18n.js?v=contest-pages-1" defer></script>
+  <script src="contest-pages.js?v=contest-pages-1" defer></script>
+  <script src="app.js?v=contest-pages-1" defer></script>
 </head>
 <body>
   <a data-i18n="skip" class="skip" href="#main">Sari la conținut</a>
@@ -21,13 +22,14 @@
     <a class="brand" href="#/" data-i18n-aria="homeLabel" aria-label="Pascal, pagina principală"><img class="brand-logo" src="assets/pascal-logo.png" alt="" width="68" height="54"><span>pascal</span></a>
     <button id="menu-toggle" class="menu-toggle" data-i18n-aria="menu" aria-label="Meniu" aria-expanded="false" aria-controls="navigation"><span data-i18n="menu">Meniu</span> <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2"/></svg></button>
     <nav id="navigation" data-i18n-aria="navLabel" aria-label="Navigație principală">
-      <a href="#/despre-concurs" data-i18n="navAbout">Despre</a><a href="#/arhiva" data-i18n="archive">Arhivă</a><a href="#/antrenament" data-i18n="practice">Antrenament</a><a href="#/clasament" data-i18n="ranking">Clasament</a>
+      <a href="#/despre-concurs" data-i18n="navAbout">Despre</a><a href="#/arhiva" data-i18n="archive">Arhivă</a><a href="#/antrenament" data-i18n="practice">Antrenament</a><a href="#/clasament" data-i18n="ranking">Clasament</a><a href="#/noutati" data-i18n="news">Noutăți</a><a href="#/regulament" data-i18n="rules">Regulament</a><a class="mobile-registration" href="#/inscriere" data-i18n="registration">Înscriere</a>
     </nav>
-    <div class="header-tools"><div class="language-switch" role="group" data-i18n-aria="language" aria-label="Limba site-ului"><button type="button" data-language="ro" lang="ro" aria-label="Română" aria-pressed="true">RO</button><button type="button" data-language="ru" lang="ru" aria-label="Русский" aria-pressed="false">RU</button></div><a class="header-action" href="#/arhiva" data-i18n="viewArchive">Vezi arhiva</a></div>
+    <div class="header-tools"><div class="language-switch" role="group" data-i18n-aria="language" aria-label="Limba site-ului"><button type="button" data-language="ro" lang="ro" aria-label="Română" aria-pressed="true">RO</button><button type="button" data-language="ru" lang="ru" aria-label="Русский" aria-pressed="false">RU</button></div><a class="header-action" href="#/inscriere" data-i18n="registration">Înscriere</a></div>
   </header>
   <main id="main" tabindex="-1"></main>
   <footer class="site-footer">
-    <div class="wrap footer-top"><div><a href="#/" class="footer-logo">pascal</a><p data-i18n="footerTagline">Ideile mari încep<br>cu o problemă bună.</p></div><div class="footer-nav"><a href="#/despre-concurs"><span data-i18n="about">Despre concurs</span>&nbsp;↗</a><a href="#/arhiva"><span data-i18n="footerArchive">Arhivă PDF</span>&nbsp;↗</a><a href="#/antrenament"><span data-i18n="practice">Antrenament</span>&nbsp;↗</a><a href="#/clasament"><span data-i18n="ranking">Clasament</span>&nbsp;↗</a></div></div>
+    <div class="wrap footer-top"><div><a href="#/" class="footer-logo">pascal</a><p data-i18n="footerTagline">Ideile mari încep<br>cu o problemă bună.</p></div><div class="footer-nav"><a href="#/despre-concurs"><span data-i18n="about">Despre concurs</span>&nbsp;↗</a><a href="#/arhiva"><span data-i18n="footerArchive">Arhivă PDF</span>&nbsp;↗</a><a href="#/antrenament"><span data-i18n="practice">Antrenament</span>&nbsp;↗</a><a href="#/clasament"><span data-i18n="ranking">Clasament</span>&nbsp;↗</a><a href="#/noutati"><span data-i18n="news">Noutăți</span>&nbsp;↗</a><a href="#/regulament"><span data-i18n="rules">Regulament</span>&nbsp;↗</a><a href="#/inscriere"><span data-i18n="registration">Înscriere</span>&nbsp;↗</a></div></div>
+    <div class="wrap footer-contact"><div><h2 data-i18n="organizers">Organizatori</h2><p id="organizer-names" data-i18n="organizersPending">Echipa organizatorică va fi anunțată în curând.</p></div><div><h2 data-i18n="contact">Contact</h2><p id="contact-address" data-i18n="contactPending">Adresa de contact va fi anunțată în curând.</p></div></div>
     <div class="wrap footer-bottom"><span>Pascal · <span data-i18n="contest">Concurs lunar de matematică</span></span></div>
   </footer>
   <noscript><div class="noscript"><p lang="ru">Для интерактивного архива включи JavaScript. Примеры задач и решений по ссылкам ниже доступны на румынском языке.</p>Pentru arhiva interactivă, activează JavaScript. Poți consulta și <a href="materiale/probleme-exemplu.html">problemele de exemplu</a> sau <a href="materiale/solutii-exemplu.html">soluțiile de exemplu</a>.</div></noscript>
